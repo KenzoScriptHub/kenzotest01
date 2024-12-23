@@ -1,0 +1,599 @@
+-- Tạo biến
+local playerName = "Kenzo Hub" -- Thay thế bằng tên mong muốn
+local iconId = "87766083101090" -- Thay thế bằng ID icon mong muốn (từ trang web Roblox)
+
+-- Hàm đặt tên và icon
+local function setNameAndIcon(name, icon)
+    game.ReplicatedStorage.SetName:InvokeServer({ ["name"] = name })
+    game.ReplicatedStorage.SetIcon:InvokeServer({ ["icon"] = icon })
+    print("Đã đặt tên và icon: " .. name)
+end
+
+-- Đặt tên và icon
+setNameAndIcon(playerName, iconId)
+-- Tạo biến
+local player = game.Players.LocalPlayer
+local character = player.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Tốc độ đánh
+local attackSpeed = 0.01 -- Thay đổi giá trị này để điều chỉnh tốc độ đánh
+
+-- Hàm tăng tốc độ đánh
+local function speedUp()
+    humanoid.AttackSpeed = 1 / attackSpeed
+end
+
+-- Hàm farm level
+local function farmLevel()
+    local nearestEnemy = nil
+    local nearestDistance = math.huge
+
+    for _, v in pairs(game.Players:GetPlayers()) do
+        if v.Team ~= player.Team then
+            local distance = (v.Character.HumanoidRootPart.Position - character.HumanoidRootPart.Position).magnitude
+            if distance < nearestDistance then
+                nearestEnemy = v
+                nearestDistance = distance
+            end
+        end
+    end
+
+    if nearestEnemy then
+        humanoid:EquipTool("Fruit")
+        humanoid:UseTool()
+    end
+end
+
+-- Hàm lấy item
+local function getItem()
+    for _, v in pairs(game.Workspace:GetDescendants()) do
+        if v.Name == "Fruit" or v.Name == "Item" then
+            if (v.Position - character.HumanoidRootPart.Position).magnitude < 10 then
+                character.HumanoidRootPart.CFrame = v.CFrame
+                wait(0.1)
+                humanoid:EquipTool(v.Name)
+            end
+        end
+    end
+end
+
+-- Gán phím tốc độ đánh (ví dụ: phím F1)
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.F1 then
+        speedUp()
+    end
+end)
+
+-- Gán phím farm level (ví dụ: phím F2)
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.F2 then
+        while true do
+            farmLevel()
+            wait(0.1)
+        end
+    end
+end)
+
+-- Gán phím lấy item (ví dụ: phím F3)
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.F3 then
+        getItem()
+    end
+end)
+-- Tạo biến
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- Hàm tìm kẻ địch gần nhất
+local function findNearestEnemy()
+    local nearestEnemy = nil
+    local nearestDistance = math.huge
+
+    for _, v in pairs(game.Players:GetPlayers()) do
+        if v.Team ~= player.Team then
+            local distance = (v.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).magnitude
+            if distance < nearestDistance then
+                nearestEnemy = v
+                nearestDistance = distance
+            end
+        end
+    end
+
+    return nearestEnemy
+end
+
+-- Hàm aim skill
+local function aimSkill()
+    local enemy = findNearestEnemy()
+    if enemy then
+        local enemyHead = enemy.Character:FindFirstChild("Head")
+        if enemyHead then
+            mouse.Target = enemyHead
+        end
+    end
+end
+
+-- Gán phím aim (ví dụ: phím trái chuột)
+mouse.Button1Down:Connect(function()
+    aimSkill()
+end)
+-- Tạo biến
+local player = game.Players.LocalPlayer
+local character = player.Character
+local humanoid = character:WaitForChild("Humanoid")
+local fruitList = {"Apple", "Banana", "Mango", "Orange"} -- Thêm trái cây muốn nhặt
+
+-- Hàm tìm trái cây gần nhất
+local function findNearestFruit()
+    local nearestFruit = nil
+    local nearestDistance = math.huge
+
+    for _, v in pairs(game.Workspace:GetDescendants()) do
+        if v.Name == "Fruit" or table.find(fruitList, v.Name) then
+            local distance = (v.Position - character.HumanoidRootPart.Position).magnitude
+            if distance < nearestDistance then
+                nearestFruit = v
+                nearestDistance = distance
+            end
+        end
+    end
+
+    return nearestFruit
+end
+
+-- Hàm di chuyển đến trái cây
+local function moveToFruit(fruit)
+    humanoid:MoveTo(fruit.Position)
+    wait(0.1)
+end
+
+-- Hàm nhặt trái cây
+local function pickFruit(fruit)
+    humanoid:EquipTool(fruit.Name)
+    wait(0.1)
+end
+-- Tạo biến
+local player = game.Players.LocalPlayer
+local character = player.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Hàm lấy đai
+local function getBelt()
+    local args = {
+        ["belt"] = true
+    }
+    game.ReplicatedStorage.GetBelt:InvokeServer(args)
+end
+
+-- Hàm tham gia tộc Rồng v1
+local function joinDragonRaceV1()
+    local args = {
+        ["race"] = "Dragon"
+    }
+    game.ReplicatedStorage.JoinRace:InvokeServer(args)
+end
+
+-- Hàm nâng cấp tộc Rồng lên v2
+local function upgradeDragonV2()
+    local args = {
+        ["race"] = "Dragon",
+        ["upgrade"] = true
+    }
+    game.ReplicatedStorage.UpgradeRace:InvokeServer(args)
+end
+
+-- Hàm nâng cấp tộc Rồng lên v3
+local function upgradeDragonV3()
+    local args = {
+        ["race"] = "Dragon",
+        ["upgrade"] = true
+    }
+    game.ReplicatedStorage.UpgradeRace:InvokeServer(args)
+end
+
+-- Hàm tìm đảo Tiền Sử
+local function findAncientIsland()
+    local islands = game.Workspace:Islands
+    for _, island in pairs(islands:GetChildren()) do
+        if island.Name == "Ancient Island" then
+            humanoid:MoveTo(island.Position)
+            wait(0.1)
+        end
+    end
+end
+
+-- Vòng lặp chính
+while true do
+    getBelt()
+    wait(0.1)
+    joinDragonRaceV1()
+    wait(0.1)
+    upgradeDragonV2()
+    wait(0.1)
+    upgradeDragonV3()
+    wait(0.1)
+    findAncientIsland()
+    wait(1)
+end
+-- Tạo biến
+local player = game.Players.LocalPlayer
+local character = player.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Danh sách võ v1
+local martialArtsV1 = {
+    "Dark Step", 
+    "Electric", 
+    "Fishman Karate", 
+    "Superhuman", 
+    "Dragon Breath"
+}
+
+-- Danh sách võ v2
+local martialArtsV2 = {
+    "Death Step", 
+    "Dragon Claw", 
+    "Lightning Leg", 
+    "Sharkman Karate", 
+    "God's Destruction", 
+    "Sanguine Art"
+}
+
+-- Hàm lấy võ
+local function getMartialArt(martialArt)
+    local args = {
+        ["martialArt"] = martialArt
+    }
+    game.ReplicatedStorage.GetMartialArt:InvokeServer(args)
+end
+
+-- Lấy võ v1
+for _, v in pairs(martialArtsV1) do
+    getMartialArt(v)
+    wait(0.1)
+end
+
+-- Lấy võ v2
+for _, v in pairs(martialArtsV2) do
+    getMartialArt(v)
+    wait(0.1)
+end
+-- Tạo biến
+local player = game.Players.LocalPlayer
+
+-- Hàm chuyển server
+local function serverHop()
+    local teleportService = game:GetService("TeleportService")
+    local currentServer = game.JobId
+    local newServer = teleportService:FindServers({
+        Query = "Blox Fruits",
+        MaxResults = 100,
+    })[1].JobId
+    
+    if newServer ~= currentServer then
+        teleportService:TeleportToPlaceInstance(newServer, player)
+    end
+end
+
+-- Vòng lặp chính
+while true do
+    serverHop()
+    wait(5) -- Chờ 5 giây trước khi chuyển server tiếp theo
+    
+    -- Kiểm tra đảo bí ẩn Mirage
+    local islands = game.Workspace:Islands
+    for _, island in pairs(islands:GetChildren()) do
+        if island.Name == "Mirage" then
+            print("Đã tìm thấy đảo bí ẩn Mirage!")
+            break
+        end
+    end
+end
+-- Tạo biến
+local player = game.Players.LocalPlayer
+local character = player.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Hàm tìm đảo bí ẩn Mirage
+local function findMirageIsland()
+    local islands = game.Workspace:Islands
+    for _, island in pairs(islands:GetChildren()) do
+        if island.Name == "Mirage" then
+            return island
+        end
+    end
+end
+
+-- Hàm bay đến đảo Mirage
+local function flyToMirage()
+    local mirageIsland = findMirageIsland()
+    if mirageIsland then
+        humanoid:MoveTo(mirageIsland.Position)
+        wait(0.1)
+    end
+end
+
+-- Hàm lụm gear
+local function collectGear()
+    local gear = game.Workspace:GetDescendants()
+    for _, v in pairs(gear) do
+        if v.Name == "Gear" then
+            humanoid:MoveTo(v.Position)
+            wait(0.1)
+        end
+    end
+end
+
+-- Hàm tìm ông bán trái
+local function findFruitVendor()
+    local npcs = game.Workspace:GetDescendants()
+    for _, npc in pairs(npcs) do
+        if npc.Name == "FruitVendor" then
+            return npc
+        end
+    end
+end
+
+-- Hàm bay đến ông bán trái
+local function flyToFruitVendor()
+    local vendor = findFruitVendor()
+    if vendor then
+        humanoid:MoveTo(vendor.Position)
+        wait(0.1)
+    end
+end
+
+-- Vòng lặp chính
+while true do
+    flyToMirage()
+    collectGear()
+    flyToFruitVendor()
+    wait(1)
+end
+-- Tạo biến
+local player = game.Players.LocalPlayer
+local character = player.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Hàm tìm Katakuri
+local function findKatakuri()
+    local npcs = game.Workspace:GetDescendants()
+    for _, npc in pairs(npcs) do
+        if npc.Name == "Katakuri" then
+            return npc
+        end
+    end
+end
+
+-- Hàm tìm Bone
+local function findBone()
+    local npcs = game.Workspace:GetDescendants()
+    for _, npc in pairs(npcs) do
+        if npc.Name == "Bone" then
+            return npc
+        end
+    end
+end
+
+-- Hàm nhận nhiệm vụ
+local function acceptQuest()
+    local questService = game:GetService("QuestService")
+    local quests = questService:GetQuests()
+    for _, quest in pairs(quests) do
+        if quest.Name == "Katakuri" or quest.Name == "Bone" then
+            questService:AcceptQuest(quest)
+        end
+    end
+end
+
+-- Hàm farm Katakuri
+local function farmKatakuri()
+    local katakuri = findKatakuri()
+    if katakuri then
+        humanoid:MoveTo(katakuri.Position)
+        wait(0.1)
+        humanoid:UseTool()
+    end
+end
+
+-- Hàm farm Bone
+local function farmBone()
+    local bone = findBone()
+    if bone then
+        humanoid:MoveTo(bone.Position)
+        wait(0.1)
+        humanoid:UseTool()
+    end
+end
+
+-- Vòng lặp chính
+while true do
+    acceptQuest()
+    farmKatakuri()
+    farmBone()
+    wait(1)
+end
+local player = game.Players.LocalPlayer
+local character = player.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+local bossList = {
+ "Katakuri",
+ "Akainu",
+ "Big Mom",
+ "Shanks",
+ "Blackbeard",
+ "Donquixote",
+ "Fleet Admiral",
+ "Admiral Ryokugyu",
+ "Admiral Fujitora"
+}
+
+local function findBoss(bossName)
+ local npcs = game.Workspace:GetDescendants()
+ for _, npc in pairs(npcs) do
+ if npc.Name == bossName then
+ return npc
+ end
+ end
+end
+
+local function killBoss(bossName)
+ local boss = findBoss(bossName)
+ if boss then
+ humanoid:MoveTo(boss.Position)
+ wait(0.1)
+ humanoid:UseTool()
+ end
+end
+
+while true do
+ for _, bossName in pairs(bossList) do
+ killBoss(bossName)
+ wait(1)
+ end
+end
+local player = game.Players.LocalPlayer
+local character = player.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+local bossList = {
+ "Katakuri",
+ "Akainu",
+ "Big Mom",
+ "Shanks",
+ "Blackbeard",
+ "Donquixote",
+ "Fleet Admiral",
+ "Admiral Ryokugyu",
+ "Admiral Fujitora"
+}
+
+local function findBoss(bossName)
+ local npcs = game.Workspace:GetDescendants()
+ for _, npc in pairs(npcs) do
+ if npc.Name == bossName then
+ return npc
+ end
+ end
+end
+
+local function killBoss(bossName)
+ local boss = findBoss(bossName)
+ if boss then
+ humanoid:MoveTo(boss.Position)
+ wait(0.1)
+ humanoid:UseTool()
+ end
+end
+
+print("Danh sách boss:")
+for i, boss in pairs(bossList) do
+ print(i .. ". " .. boss)
+end
+
+local input = io.read("Chọn số của boss: ")
+local bossName = bossList[tonumber(input)]
+
+while true do
+ killBoss(bossName)
+ wait(1)
+end
+local player = game.Players.LocalPlayer
+local teleportService = game:GetService("TeleportService")
+
+local function findFullMomServer()
+    local servers = teleportService:FindServers({
+        Query = "Blox Fruits",
+        MaxResults = 100,
+    })
+
+    for _, server in pairs(servers) do
+        if server.Name:lower():find("full mom") then
+            teleportService:TeleportToPlaceInstance(server.JobId, player)
+            wait(1)
+            print("Đã tìm thấy server Full Mom!")
+            script:Disable()
+            break
+        end
+    end
+end
+
+while true do
+    findFullMomServer()
+    wait(5)
+end
+local player = game.Players.LocalPlayer
+local character = player.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Danh sách mục tiêu
+local targetList = {
+    "Sea Event",
+    "Sea King",
+    "Sea Beast",
+    "Terrorshark",
+    "Chip",
+    "Shark",
+    "Piranha"
+}
+
+-- Hàm tìm mục tiêu
+local function findTarget()
+    local npcs = game.Workspace:GetDescendants()
+    for _, npc in pairs(npcs) do
+        if table.find(targetList, npc.Name) then
+            return npc
+        end
+    end
+end
+
+-- Hàm farm mục tiêu
+local function farmTarget()
+    local target = findTarget()
+    if target then
+        humanoid:MoveTo(target.Position)
+        wait(0.1)
+        humanoid:UseTool()
+    end
+end
+
+-- Vòng lặp chính
+while true do
+    farmTarget()
+    wait(1)
+end
+local player = game.Players.LocalPlayer
+local character = player.Character
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Cài đặt
+local autoRandomFruit = true
+local autoSaveFruit = true
+
+-- Hàm random fruit
+local function randomFruit()
+ local args = {
+ ["fruit"] = math.random(1, 12) -- Thay đổi số lượng fruit theo phiên bản Blox Fruits
+ }
+ game.ReplicatedStorage.FruitRandomizer:InvokeServer(args)
+end
+
+-- Hàm lưu fruit
+local function saveFruit()
+ local args = {
+ ["fruit"] = game.Players.LocalPlayer.PlayerGui.FruitFrame.FruitName.Text
+ }
+ game.ReplicatedStorage.SaveFruit:InvokeServer(args)
+end
+
+-- Vòng lặp chính
+while autoRandomFruit do
+ randomFruit()
+ wait(1)
+ if autoSaveFruit then
+ saveFruit()
+ end
+ wait(10) -- Thời gian chờ giữa các lần random
+end
